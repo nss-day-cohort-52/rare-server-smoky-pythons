@@ -7,6 +7,7 @@ from views.categories_requests import create_category, find_category, get_all_ca
 
 
 from views import create_user, get_all_posts, get_single_post, login_user
+from views.tags_requests import create_tag, find_tag, get_all_tags, get_single_tag
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -88,6 +89,8 @@ class HandleRequests(BaseHTTPRequestHandler):
 
             if key == "label" and resource == "categories":
                 response = find_category(value)
+            if key == "label" and resource == "tags":
+                response = find_tag(value)
 
 
         self.wfile.write(response.encode())
@@ -106,6 +109,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             response = create_user(post_body)
         if resource == 'categories':
             response = create_category(post_body)
+        if resource == 'tags':
+            response = create_tag(post_body)
 
         self.wfile.write(response.encode())
 
