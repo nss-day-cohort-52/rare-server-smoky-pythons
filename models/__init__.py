@@ -1,2 +1,3 @@
-from models.category import Category
-from models.tag import Tag
+from .category import Category
+from .tag import Tag
+from .post import Post
