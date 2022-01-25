@@ -1,5 +1,5 @@
 CREATE TABLE "Users" (
-  "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+  "id" INTEGER PRIMARY KEY NOT NULL AUTOINCREMENT,
   "first_name" varchar,
   "last_name" varchar,
   "email" varchar,
@@ -22,7 +22,7 @@ CREATE TABLE "DemotionQueue" (
 
 
 CREATE TABLE "Subscriptions" (
-  "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+  "id" INTEGER PRIMARY KEY NOT NULL AUTOINCREMENT,
   "follower_id" INTEGER,
   "author_id" INTEGER,
   "created_on" date,
@@ -31,18 +31,16 @@ CREATE TABLE "Subscriptions" (
 );
 
 CREATE TABLE "Posts" (
-  "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+  "id" INTEGER PRIMARY KEY NOT NULL AUTOINCREMENT,
   "user_id" INTEGER,
   "category_id" INTEGER,
   "title" varchar,
   "publication_date" date,
-  "image_url" varchar,
-  "content" varchar,
-  "approved" bit
+  "content" varchar
 );
 
 CREATE TABLE "Comments" (
-  "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+  "id" INTEGER PRIMARY KEY NOT NULL AUTOINCREMENT,
   "post_id" INTEGER,
   "author_id" INTEGER,
   "content" varchar,
@@ -51,13 +49,13 @@ CREATE TABLE "Comments" (
 );
 
 CREATE TABLE "Reactions" (
-  "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+  "id" INTEGER PRIMARY KEY NOT NULL AUTOINCREMENT,
   "label" varchar,
   "image_url" varchar
 );
 
 CREATE TABLE "PostReactions" (
-  "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+  "id" INTEGER PRIMARY KEY NOT NULL AUTOINCREMENT,
   "user_id" INTEGER,
   "reaction_id" INTEGER,
   "post_id" INTEGER,
@@ -67,12 +65,12 @@ CREATE TABLE "PostReactions" (
 );
 
 CREATE TABLE "Tags" (
-  "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+  "id" INTEGER PRIMARY KEY NOT NULL AUTOINCREMENT,
   "label" varchar
 );
 
 CREATE TABLE "PostTags" (
-  "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+  "id" INTEGER PRIMARY KEY NOT NULL AUTOINCREMENT,
   "post_id" INTEGER,
   "tag_id" INTEGER,
   FOREIGN KEY(`post_id`) REFERENCES `Posts`(`id`),
@@ -80,10 +78,12 @@ CREATE TABLE "PostTags" (
 );
 
 CREATE TABLE "Categories" (
-  "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+  "id" INTEGER PRIMARY KEY NOT NULL AUTOINCREMENT,
   "label" varchar
 );
 
 INSERT INTO Categories ('label') VALUES ('News');
 INSERT INTO Tags ('label') VALUES ('JavaScript');
-INSERT INTO Reactions ('label', 'image_url') VALUES ('happy', 'https://pngtree.com/so/happy');
+
+insert into Posts values (null, 1, 1, 'title', 'date', 'content');
+insert into Posts values (null, 1, 1, 'title 2', 'date 2', 'content 2');
