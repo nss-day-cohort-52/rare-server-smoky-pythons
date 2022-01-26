@@ -1,14 +1,11 @@
 import json
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
-
-import resource
 from views.categories_requests import create_category, find_category, get_all_categories, get_single_category
-
-
-from views import create_user, get_all_posts, get_single_post, login_user
-from views.post_requests import create_post, delete_post
+from views.post_requests import create_post, delete_post, get_single_post, get_all_posts
+from views import create_user, login_user, get_single_user, get_all_users
 from views.tags_requests import create_tag, find_tag, get_all_tags, get_single_tag
+
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -84,6 +81,11 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = get_single_post(id)
                 else:
                     response = get_all_posts()
+            if resource == 'users':
+                if id:
+                    response = get_single_user(id)
+                else:
+                    response = get_all_users()
                     
         elif len(parsed) == 3:
             (resource, key, value) = parsed
