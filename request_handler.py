@@ -7,7 +7,7 @@ from views.categories_requests import create_category, find_category, get_all_ca
 
 
 from views import create_user, get_all_posts, get_single_post, login_user
-from views.post_requests import create_post
+from views.post_requests import create_post, delete_post
 from views.tags_requests import create_tag, find_tag, get_all_tags, get_single_tag
 
 
@@ -122,7 +122,10 @@ class HandleRequests(BaseHTTPRequestHandler):
 
     def do_DELETE(self):
         """Handles DELETE Requests"""
-        pass
+        self._set_headers(204)
+        (resource, id) = self.parse_url()
+        if resource == "posts":
+            delete_post(id)
 
 
 def main():
