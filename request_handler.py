@@ -6,7 +6,7 @@ import resource
 from views.categories_requests import create_category, find_category, get_all_categories, get_single_category
 
 
-from views import create_user, get_all_posts, get_single_post, login_user
+from views import create_user, get_all_posts, get_single_post, login_user, get_all_users
 
 
 class HandleRequests(BaseHTTPRequestHandler):
