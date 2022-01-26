@@ -1,13 +1,11 @@
 import json
-
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
-import resource
-from views.categories_requests import create_category, find_category, get_all_categories, get_single_category
-
-
-from views import create_user, get_all_posts, get_single_post, login_user
-from views.tags_requests import create_tag, find_tag, get_all_tags, get_single_tag
+from views import (create_category, create_tag, create_user, find_category,
+                   find_tag, get_all_categories, get_all_comments,
+                   get_all_posts, get_all_tags, get_single_category,
+                   get_single_comment, get_single_post, get_single_tag,
+                   login_user, add_comment)
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -83,6 +81,11 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = get_single_post(id)
                 else:
                     response = get_all_posts()
+            if resource == 'comments':
+                if id:
+                    response = get_single_comment(id)
+                else:
+                    response = get_all_comments()
                     
         elif len(parsed) == 3:
             (resource, key, value) = parsed
@@ -111,6 +114,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             response = create_category(post_body)
         if resource == 'tags':
             response = create_tag(post_body)
+        if resource == 'comments':
+            response = add_comment(post_body)
 
         self.wfile.write(response.encode())
 
