@@ -61,7 +61,7 @@ def get_all_users():
 
         return json.dumps(users)
 
-def get_single_user():
+def get_single_user(id):
     """Returns a single user from the server"""
     with sqlite3.connect("./db.sqlite3") as conn:
         conn.row_factory = sqlite3.Row
