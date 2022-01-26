@@ -1,14 +1,9 @@
 import json
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
-
-import resource
 from views.categories_requests import create_category, find_category, get_all_categories, get_single_category
-
-
-
-from views import create_user, get_all_posts, get_single_post, login_user, get_all_users, get_single_user
-from views.post_requests import create_post
+from views.post_requests import create_post, delete_post, get_single_post, get_all_posts
+from views import create_user, login_user, get_single_user, get_all_users
 from views.tags_requests import create_tag, find_tag, get_all_tags, get_single_tag
 
 
@@ -129,7 +124,10 @@ class HandleRequests(BaseHTTPRequestHandler):
 
     def do_DELETE(self):
         """Handles DELETE Requests"""
-        pass
+        self._set_headers(204)
+        (resource, id) = self.parse_url()
+        if resource == "posts":
+            delete_post(id)
 
 
 def main():
