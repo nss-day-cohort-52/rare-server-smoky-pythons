@@ -2,7 +2,9 @@ import json
 import sqlite3
 
 from models import Post
+from models.category import Category
 from models.tag import Tag
+from models.user import User
 
 
 def get_all_posts():
@@ -12,7 +14,25 @@ def get_all_posts():
         db_cursor = conn.cursor()
 
         db_cursor.execute("""
-        select * from Posts                  
+        SELECT 
+        p.id,
+        p.user_id,
+        p.category_id,
+        p.title,
+        p.publication_date,
+        p.content,
+        u.first_name,
+        u.last_name,
+        u.email,
+        u.bio,
+        u.username,
+        u.password,
+        c. label
+        FROM Posts p 
+        LEFT JOIN Users u
+            on u.id = p.user_id
+        LEFT JOIN Categories c 
+            on c.id = p.category_id              
         """)
 
         dataset = db_cursor.fetchall()
@@ -22,7 +42,11 @@ def get_all_posts():
         for row in dataset:
             post = Post(row['id'], row['user_id'], row['category_id'],
                         row['title'], row['publication_date'], row['content'])
-
+            user = User(row['id'], row['first_name'], row['last_name'],
+                        row['email'], row['bio'], row['username'], row['password'])
+            category = Category(row['id'], row['label'])
+            post.user = user.__dict__
+            post.category = category.__dict__
             posts.append(post.__dict__)
 
             db_cursor.execute("""
@@ -52,7 +76,25 @@ def get_single_post(id):
         db_cursor = conn.cursor()
 
         db_cursor.execute("""
-        select * from Posts
+        SELECT 
+        p.id,
+        p.user_id,
+        p.category_id,
+        p.title,
+        p.publication_date,
+        p.content,
+        u.first_name,
+        u.last_name,
+        u.email,
+        u.bio,
+        u.username,
+        u.password,
+        c. label
+        FROM Posts p 
+        LEFT JOIN Users u
+            on u.id = p.user_id
+        LEFT JOIN Categories c 
+            on c.id = p.category_id    
         where id = ?                  
         """, (id, ))
 
@@ -60,6 +102,12 @@ def get_single_post(id):
 
         post = Post(data['id'], data['user_id'], data['category_id'],
                     data['title'], data['publication_date'], data['content'])
+        user = User(data['id'], data['first_name'], data['last_name'],
+                    data['email'], data['bio'], data['username'], data['password'])
+        category = Category(data['id'], data['label'])
+
+        post.user = user.__dict__
+        post.category = category.__dict__
 
         db_cursor.execute("""
             select a.id, a.label
