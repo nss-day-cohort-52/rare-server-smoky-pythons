@@ -1,11 +1,12 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
-from views import (create_category, create_tag, create_user, find_category,
-                   find_tag, get_all_categories, get_all_comments,
-                   get_all_posts, get_all_tags, get_single_category,
-                   get_single_comment, get_single_post, get_single_tag,
-                   login_user, add_comment)
+from views import (add_comment, create_category, create_post, create_tag,
+                   create_user, find_category, find_tag, get_all_categories,
+                   get_all_comments, get_all_posts, get_all_tags,
+                   get_all_users, get_single_category, get_single_comment,
+                   get_single_post, get_single_tag, get_single_user,
+                   login_user)
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -86,6 +87,11 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = get_single_comment(id)
                 else:
                     response = get_all_comments()
+            if resource == 'users':
+                if id:
+                    response = get_single_user(id)
+                else:
+                    response = get_all_users()
                     
         elif len(parsed) == 3:
             (resource, key, value) = parsed
@@ -116,7 +122,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             response = create_tag(post_body)
         if resource == 'comments':
             response = add_comment(post_body)
-
+        if resource == 'posts':
+            response = create_post(post_body)
         self.wfile.write(response.encode())
 
     def do_PUT(self):
