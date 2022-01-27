@@ -9,3 +9,4 @@ class Post:
         self.publication_date = publication_date
         self.content = content
         self.tags = []
+        self.category = None
