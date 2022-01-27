@@ -10,7 +10,7 @@ from views import (add_comment, create_category, create_post, create_tag,
                    login_user, get_all_post_tags)
 
 from views.categories_requests import create_category, find_category, get_all_categories, get_single_category
-from views.post_requests import create_post, delete_post, get_single_post, get_all_posts
+from views.post_requests import create_post, delete_post, get_posts_by_category, get_posts_by_user, get_single_post, get_all_posts
 from views import create_user, login_user, get_single_user, get_all_users
 from views.tags_requests import create_tag, find_tag, get_all_tags, get_single_tag
 
@@ -110,6 +110,10 @@ class HandleRequests(BaseHTTPRequestHandler):
                 response = find_category(value)
             if key == "label" and resource == "tags":
                 response = find_tag(value)
+            if key == "user_id" and resource == "posts":
+                response = get_posts_by_user(value)
+            if key == "category_id" and resource == "posts":
+                response = get_posts_by_category(value)
 
 
         self.wfile.write(response.encode())
