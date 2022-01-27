@@ -238,7 +238,8 @@ def get_posts_by_category(category):
         u.bio,
         u.username,
         u.password,
-        c. label
+        u.created_on,
+        c.label
         FROM Posts p 
         LEFT JOIN Users u
             on u.id = p.user_id
@@ -253,7 +254,7 @@ def get_posts_by_category(category):
 
         for row in dataset:
             post = Post(row['id'], row['user_id'], row['category_id'],
-                        row['title'], row['publication_date'], row['content'])
+                        row['title'], row['publication_date'], row['content'], row['created_on'])
             user = User(row['id'], row['first_name'], row['last_name'],
                         row['email'], row['bio'], row['username'], row['password'])
             category = Category(row['id'], row['label'])
