@@ -96,6 +96,7 @@ def create_post(new_post):
         id = db_cursor.lastrowid
         new_post['id'] = id
 
+
         for tag_id in new_post['tags']:
             db_cursor.execute("""
             insert into PostTags (post_id, tag_id)
@@ -103,3 +104,14 @@ def create_post(new_post):
             """, (new_post['id'], tag_id))
 
     return json.dumps(new_post)
+
+
+def delete_post(id):
+    with sqlite3.connect("./db.sqlite3") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        DELETE FROM Posts
+        WHERE id = ?
+        """, (id, ))
+
