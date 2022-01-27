@@ -194,10 +194,27 @@ def get_posts_by_user(user):
                         row['email'], row['bio'], row['username'], row['password'])
             category = Category(row['id'], row['label'])
 
-        post.user = user.__dict__
-        post.category = category.__dict__
+            post.user = user.__dict__
+            post.category = category.__dict__
 
-        posts.append(post.__dict__)
+            posts.append(post.__dict__)
+
+            db_cursor.execute("""
+                select a.id, a.label
+                from PostTags ma
+                join Tags a on a.id = ma.tag_id
+                where ma.post_id = ?
+                """, (post.id, ))
+
+            tags = []
+
+            tag_dataset = db_cursor.fetchall()
+
+            for tag_row in tag_dataset:
+                tag = Tag(tag_row['id'], tag_row['label'])
+                tags.append(tag.__dict__)
+
+                post.tags = tags
 
         return json.dumps(posts)
 
@@ -241,9 +258,26 @@ def get_posts_by_category(category):
                         row['email'], row['bio'], row['username'], row['password'])
             category = Category(row['id'], row['label'])
 
-        post.user = user.__dict__
-        post.category = category.__dict__
+            post.user = user.__dict__
+            post.category = category.__dict__
 
-        posts.append(post.__dict__)
+            posts.append(post.__dict__)
+
+            db_cursor.execute("""
+                    select a.id, a.label
+                    from PostTags ma
+                    join Tags a on a.id = ma.tag_id
+                    where ma.post_id = ?
+                    """, (post.id, ))
+
+            tags = []
+
+            tag_dataset = db_cursor.fetchall()
+
+            for tag_row in tag_dataset:
+                tag = Tag(tag_row['id'], tag_row['label'])
+                tags.append(tag.__dict__)
+
+                post.tags = tags
 
         return json.dumps(posts)
