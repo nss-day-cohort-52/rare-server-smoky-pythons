@@ -95,7 +95,7 @@ def get_single_post(id):
             on u.id = p.user_id
         LEFT JOIN Categories c 
             on c.id = p.category_id    
-        where id = ?                  
+        where p.id = ?                  
         """, (id, ))
 
         data = db_cursor.fetchone()
@@ -144,6 +144,7 @@ def create_post(new_post):
         new_post['id'] = id
     return json.dumps(new_post)
 
+
 def delete_post(id):
     with sqlite3.connect("./db.sqlite3") as conn:
         db_cursor = conn.cursor()
@@ -152,3 +153,97 @@ def delete_post(id):
         DELETE FROM Posts
         WHERE id = ?
         """, (id, ))
+
+
+def get_posts_by_user(user):
+    with sqlite3.connect("./db.sqlite3") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        select 
+        p.id,
+        p.user_id,
+        p.category_id,
+        p.title,
+        p.publication_date,
+        p.content,
+        u.first_name,
+        u.last_name,
+        u.email,
+        u.bio,
+        u.username,
+        u.password,
+        c. label
+        FROM Posts p 
+        LEFT JOIN Users u
+            on u.id = p.user_id
+        LEFT JOIN Categories c 
+            on c.id = p.category_id    
+        where p.user_id = ?                 
+        """, (user, ))
+
+        posts = []
+
+        dataset = db_cursor.fetchall()
+
+        for row in dataset:
+            post = Post(row['id'], row['user_id'], row['category_id'],
+                        row['title'], row['publication_date'], row['content'])
+            user = User(row['id'], row['first_name'], row['last_name'],
+                        row['email'], row['bio'], row['username'], row['password'])
+            category = Category(row['id'], row['label'])
+
+        post.user = user.__dict__
+        post.category = category.__dict__
+
+        posts.append(post.__dict__)
+
+        return json.dumps(posts)
+
+
+def get_posts_by_category(category):
+    with sqlite3.connect("./db.sqlite3") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        select 
+        p.id,
+        p.user_id,
+        p.category_id,
+        p.title,
+        p.publication_date,
+        p.content,
+        u.first_name,
+        u.last_name,
+        u.email,
+        u.bio,
+        u.username,
+        u.password,
+        c. label
+        FROM Posts p 
+        LEFT JOIN Users u
+            on u.id = p.user_id
+        LEFT JOIN Categories c 
+            on c.id = p.category_id    
+        where p.category_id = ?                 
+        """, (category, ))
+
+        posts = []
+
+        dataset = db_cursor.fetchall()
+
+        for row in dataset:
+            post = Post(row['id'], row['user_id'], row['category_id'],
+                        row['title'], row['publication_date'], row['content'])
+            user = User(row['id'], row['first_name'], row['last_name'],
+                        row['email'], row['bio'], row['username'], row['password'])
+            category = Category(row['id'], row['label'])
+
+        post.user = user.__dict__
+        post.category = category.__dict__
+
+        posts.append(post.__dict__)
+
+        return json.dumps(posts)
