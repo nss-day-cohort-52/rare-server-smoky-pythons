@@ -163,6 +163,15 @@ def delete_post(id):
         DELETE FROM Posts
         WHERE id = ?
         """, (id, ))
+        db_cursor.execute("""
+        DELETE FROM Comments
+        WHERE post_id = ?
+        """, (id, ))
+        
+        db_cursor.execute("""
+        DELETE FROM PostTags
+        WHERE post_id = ?
+        """, (id, ))
 
 
 def get_posts_by_user(user):
