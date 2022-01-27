@@ -56,7 +56,7 @@ def get_all_users():
 
         for row in dataset:
             user = User(row['id'], row['first_name'], row['last_name'],
-                        row['username'], row['email'], row['password'], row['bio'])
+                        row['username'], row['email'], row['password'], row['bio'],row['created_on'])
             users.append(user.__dict__)
 
         return json.dumps(users)
@@ -75,7 +75,8 @@ def get_single_user(id):
             u.username, 
             u.email, 
             u.password, 
-            u.bio
+            u.bio,
+            u.created_on
         FROM Users u 
         WHERE u.id = ?
         """, (id, ))
@@ -83,9 +84,9 @@ def get_single_user(id):
         data = db_cursor.fetchone()
 
         user = User(data['id'],data['first_name'],data['last_name'],
-                    data['username'],data['email'],data['password'],data['bio'])
+                    data['username'],data['email'],data['password'],data['bio'],data['created_on'])
 
-        return json.dumps(user)
+        return json.dumps(user.__dict__)
 
 def create_user(user):
     """Adds a user to the database when they register
