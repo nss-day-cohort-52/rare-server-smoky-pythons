@@ -6,7 +6,7 @@ from views import (add_comment, create_category, create_post, create_tag,
                    get_all_comments, get_all_posts, get_all_tags,
                    get_all_users, get_single_category, get_single_comment,
                    get_single_post, get_single_tag, get_single_user,
-                   login_user)
+                   login_user, get_all_post_tags)
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -64,6 +64,7 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Parse URL and store entire tuple in a variable
         parsed = self.parse_url()
 
+
         if len(parsed) == 2:
             (resource, id) = parsed
 
@@ -92,6 +93,8 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = get_single_user(id)
                 else:
                     response = get_all_users()
+            if resource == 'posttags':
+                response = get_all_post_tags()
                     
         elif len(parsed) == 3:
             (resource, key, value) = parsed
