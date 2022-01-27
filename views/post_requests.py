@@ -1,3 +1,4 @@
+from curses import newpad
 import json
 import sqlite3
 
@@ -142,6 +143,13 @@ def create_post(new_post):
 
         id = db_cursor.lastrowid
         new_post['id'] = id
+
+        for tag_id in new_post['tags']:
+            db_cursor.execute("""
+            insert into PostTags (post_id, tag_id)
+            values (?, ?)
+            """, (new_post['id'], tag_id))
+
     return json.dumps(new_post)
 
 
