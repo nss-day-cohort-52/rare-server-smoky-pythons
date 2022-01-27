@@ -24,10 +24,11 @@ def get_all_posts():
         p.content,
         u.first_name,
         u.last_name,
-        u.email,
-        u.bio,
         u.username,
+        u.email,
         u.password,
+        u.bio,
+        u.created_on,
         c. label
         FROM Posts p 
         LEFT JOIN Users u
@@ -44,7 +45,7 @@ def get_all_posts():
             post = Post(row['id'], row['user_id'], row['category_id'],
                         row['title'], row['publication_date'], row['content'])
             user = User(row['id'], row['first_name'], row['last_name'],
-                        row['email'], row['bio'], row['username'], row['password'])
+                    row['username'], row['email'], row['password'], row['bio'], row['created_on'])
             category = Category(row['id'], row['label'])
             post.user = user.__dict__
             post.category = category.__dict__
@@ -86,10 +87,11 @@ def get_single_post(id):
         p.content,
         u.first_name,
         u.last_name,
-        u.email,
-        u.bio,
         u.username,
+        u.email,
         u.password,
+        u.bio,
+        u.created_on,
         c. label
         FROM Posts p 
         LEFT JOIN Users u
@@ -104,7 +106,7 @@ def get_single_post(id):
         post = Post(data['id'], data['user_id'], data['category_id'],
                     data['title'], data['publication_date'], data['content'])
         user = User(data['id'], data['first_name'], data['last_name'],
-                    data['email'], data['bio'], data['username'], data['password'])
+                    data['username'], data['email'], data['password'], data['bio'], data['created_on'])
         category = Category(data['id'], data['label'])
 
         post.user = user.__dict__
@@ -178,10 +180,11 @@ def get_posts_by_user(user):
         p.content,
         u.first_name,
         u.last_name,
-        u.email,
-        u.bio,
         u.username,
+        u.email,
         u.password,
+        u.bio,
+        u.created_on,
         c. label
         FROM Posts p 
         LEFT JOIN Users u
@@ -199,7 +202,7 @@ def get_posts_by_user(user):
             post = Post(row['id'], row['user_id'], row['category_id'],
                         row['title'], row['publication_date'], row['content'])
             user = User(row['id'], row['first_name'], row['last_name'],
-                        row['email'], row['bio'], row['username'], row['password'])
+                    row['username'], row['email'], row['password'], row['bio'], row['created_on'])
             category = Category(row['id'], row['label'])
 
             post.user = user.__dict__
@@ -242,10 +245,10 @@ def get_posts_by_category(category):
         p.content,
         u.first_name,
         u.last_name,
-        u.email,
-        u.bio,
         u.username,
+        u.email,
         u.password,
+        u.bio,
         u.created_on,
         c.label
         FROM Posts p 
@@ -262,9 +265,9 @@ def get_posts_by_category(category):
 
         for row in dataset:
             post = Post(row['id'], row['user_id'], row['category_id'],
-                        row['title'], row['publication_date'], row['content'], row['created_on'])
+                        row['title'], row['publication_date'], row['content'])
             user = User(row['id'], row['first_name'], row['last_name'],
-                        row['email'], row['bio'], row['username'], row['password'])
+                    row['username'], row['email'], row['password'], row['bio'], row['created_on'])
             category = Category(row['id'], row['label'])
 
             post.user = user.__dict__
