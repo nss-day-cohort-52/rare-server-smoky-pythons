@@ -2,6 +2,7 @@ import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 from views import (add_comment, create_category, create_post, create_tag,
+
                    create_user, delete_comment, find_category, find_tag,
                    get_all_categories, get_all_comments, get_all_post_tags,
                    get_all_posts, get_all_tags, get_all_users,
@@ -14,6 +15,21 @@ from views.post_requests import (create_post, delete_post, get_all_posts,
                                  get_single_post)
 from views.tags_requests import (create_tag, find_tag, get_all_tags,
                                  get_single_tag)
+
+                   create_user, find_category, find_tag, get_all_categories,
+                   get_all_comments, get_all_posts, get_all_tags,
+                   get_all_users, get_single_category, get_single_comment,
+                   get_single_post, get_single_tag, get_single_user,
+                   login_user, get_all_post_tags, get_all_subscriptions, create_subscription, delete_subscription,get_users_subscriptions,delete_comment)
+
+
+from views.categories_requests import create_category, find_category, get_all_categories, get_single_category
+from views.post_requests import create_post, delete_post, get_posts_by_category, get_posts_by_user, get_single_post, get_all_posts
+from views import create_user, login_user, get_single_user, get_all_users
+from views.tags_requests import create_tag, find_tag, get_all_tags, get_single_tag
+
+
+
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -102,6 +118,12 @@ class HandleRequests(BaseHTTPRequestHandler):
             if resource == 'posttags':
                 response = get_all_post_tags()
 
+            if resource == 'subscriptions':
+                if id:
+                    response = get_users_subscriptions(id)
+                else:
+                    response = get_all_subscriptions()
+
         elif len(parsed) == 3:
             (resource, key, value) = parsed
 
@@ -136,6 +158,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             response = add_comment(post_body)
         if resource == 'posts':
             response = create_post(post_body)
+        if resource == 'subscriptions':
+            response = create_subscription(post_body)
         self.wfile.write(response.encode())
 
     def do_PUT(self):
@@ -163,6 +187,8 @@ class HandleRequests(BaseHTTPRequestHandler):
         (resource, id) = self.parse_url()
         if resource == "posts":
             delete_post(id)
+        if resource == 'subscriptions':
+            delete_subscription(id)
         if resource == "comments":
             delete_comment(id)
 
