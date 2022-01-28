@@ -47,6 +47,14 @@ CREATE TABLE "Categories" (
   "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
   "label" varchar
 );
+CREATE TABLE "Subscriptions" (
+  "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  "follower_id" INTEGER,
+  "author_id" INTEGER,
+  "created_on" date,
+  FOREIGN KEY (`follower_id`) REFERENCES `Users` (`id`),
+  FOREIGN KEY(`author_id`) REFERENCES `Users` (`id`)
+)
 
 INSERT INTO Categories ('label') VALUES ('News');
 INSERT INTO Tags ('label') VALUES ('JavaScript');
