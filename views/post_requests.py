@@ -44,9 +44,9 @@ def get_all_posts():
         for row in dataset:
             post = Post(row['id'], row['user_id'], row['category_id'],
                         row['title'], row['publication_date'], row['content'])
-            user = User(row['id'], row['first_name'], row['last_name'],
-                    row['username'], row['email'], row['password'], row['bio'], row['created_on'])
-            category = Category(row['id'], row['label'])
+            user = User(row['user_id'], row['first_name'], row['last_name'],
+                        row['username'], row['email'], row['password'], row['bio'], row['created_on'])
+            category = Category(row['category_id'], row['label'])
             post.user = user.__dict__
             post.category = category.__dict__
             posts.append(post.__dict__)
@@ -105,9 +105,9 @@ def get_single_post(id):
 
         post = Post(data['id'], data['user_id'], data['category_id'],
                     data['title'], data['publication_date'], data['content'])
-        user = User(data['id'], data['first_name'], data['last_name'],
+        user = User(data['user_id'], data['first_name'], data['last_name'],
                     data['username'], data['email'], data['password'], data['bio'], data['created_on'])
-        category = Category(data['id'], data['label'])
+        category = Category(data['category_id'], data['label'])
 
         post.user = user.__dict__
         post.category = category.__dict__
@@ -141,7 +141,9 @@ def create_post(new_post):
             ( user_id, category_id, title, publication_date, content )
         VALUES 
             ( ?, ?, ?, ?, ? );
-        """, (new_post['user_id'], new_post['category_id'], new_post['title'], new_post['publication_date'], new_post['content'], ))
+        """, (new_post['user_id'], new_post['category_id'],
+              new_post['title'], new_post['publication_date'],
+              new_post['content'], ))
 
         id = db_cursor.lastrowid
         new_post['id'] = id
@@ -153,6 +155,40 @@ def create_post(new_post):
             """, (new_post['id'], tag_id))
 
     return json.dumps(new_post)
+
+
+def update_post(id, post):
+    with sqlite3.connect("./db.sqlite3") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        update posts
+            set
+                user_id = ?,
+                category_id = ?,
+                title = ?,
+                publication_date = ?,
+                content = ?
+        where id = ?
+        """, (post['user_id'], post['category_id'],
+              post['title'], post['publication_date'],
+              post['content'], id))
+
+        rows_affected = db_cursor.rowcount
+
+        # for tag_id in post['tags']:
+        #     db_cursor.execute("""
+        #     update posttags
+        #         set
+        #             tag_id = ?
+        #     where post_id = ?
+        #     """, (tag_id, id))
+
+        if rows_affected == 0:
+            return False
+        else:
+            return True
 
 
 def delete_post(id):
@@ -167,7 +203,7 @@ def delete_post(id):
         DELETE FROM Comments
         WHERE post_id = ?
         """, (id, ))
-        
+
         db_cursor.execute("""
         DELETE FROM PostTags
         WHERE post_id = ?
@@ -211,7 +247,7 @@ def get_posts_by_user(user):
             post = Post(row['id'], row['user_id'], row['category_id'],
                         row['title'], row['publication_date'], row['content'])
             user = User(row['id'], row['first_name'], row['last_name'],
-                    row['username'], row['email'], row['password'], row['bio'], row['created_on'])
+                        row['username'], row['email'], row['password'], row['bio'], row['created_on'])
             category = Category(row['id'], row['label'])
 
             post.user = user.__dict__
@@ -276,7 +312,7 @@ def get_posts_by_category(category):
             post = Post(row['id'], row['user_id'], row['category_id'],
                         row['title'], row['publication_date'], row['content'])
             user = User(row['id'], row['first_name'], row['last_name'],
-                    row['username'], row['email'], row['password'], row['bio'], row['created_on'])
+                        row['username'], row['email'], row['password'], row['bio'], row['created_on'])
             category = Category(row['id'], row['label'])
 
             post.user = user.__dict__
